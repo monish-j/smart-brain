@@ -13,7 +13,7 @@ import Rank from './components/Rank/Rank';
 import './App.css';
 
 const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const initialState = {

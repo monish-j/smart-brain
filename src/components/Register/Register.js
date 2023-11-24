@@ -1,49 +1,49 @@
-import React from 'react'
+import React from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+
 
 class Register extends React.Component {
-    constructor(props) {
-        super(props); 
-        this.state = {
-          email: '',
-          password: '',
-          name:  ''
-     
-       }
-     }
-     
-       onNameChange = (event) => {
-        this.setState({name: event.target.value})
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      name: ''
     }
+  }
 
+  onNameChange = (event) => {
+    this.setState({name: event.target.value})
+  }
 
-         onEmailChange = (event) => {
-            this.setState({email: event.target.value})
+  onEmailChange = (event) => {
+    this.setState({email: event.target.value})
+  }
+
+  onPasswordChange = (event) => {
+    this.setState({password: event.target.value})
+  }
+
+  onSubmitSignIn = async (event) => {
+    event.preventDefault();
+    const { user, error } = await supabase.auth.signUp({
+      email: this.state.email,
+      password: this.state.password,
+    });
+
+    if (error) {
+      console.error('Error: ', error.message);
+    } else {
+      // The user has been registered successfully
+      this.props.loadUser(user);
+      this.props.onRouteChange('home');
     }
-     
-         onPasswordChange = (event) => {
-             this.setState({password: event.target.value})
-    } 
-    
-    onSubmitSignIn = (event) => {
-        event.preventDefault();
-        fetch('http://localhost:3000/register', {
-          method: 'post',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-              email: this.state.email,
-              password: this.state.password,
-              name: this.state.name
-          })
-       })
-         .then(response => response.json())
-         .then(user => {
-            if (user.id) {
-               this.props.loadUser(user)
-               this.props.onRouteChange('home');
-            }
-         })
-        
-      } 
+  }
         
      
    render() {

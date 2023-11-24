@@ -1,5 +1,7 @@
+
 import React, { Component } from 'react';
 import ParticlesBg from 'particles-bg'
+import { createClient } from '@supabase/supabase-js';
 
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
@@ -10,7 +12,9 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import './App.css';
 
-
+const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const initialState = {
   input: '',
@@ -26,7 +30,6 @@ const initialState = {
     joined: ''
   }
 }
-
 
 class App extends Component {
   constructor() {
@@ -45,7 +48,9 @@ class App extends Component {
   });
   }
 
-  calculateFaceLocation = (data) => {
+
+
+ calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
@@ -68,7 +73,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://smart-brain-alpha.vercel.app/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -79,7 +84,7 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://smart-brain-alpha.vercel.app/image', {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

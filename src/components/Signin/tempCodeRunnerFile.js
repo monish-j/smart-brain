@@ -1,44 +1,42 @@
 import React from 'react';
 
 
-import { createClient } from '@supabase/supabase-js';
-
-
-const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 class Signin extends React.Component  {
   constructor(props) {
    super(props);
    this.state = {
     signInEmail: '',
     signInPassword: ''
+
  }
 }
 
-onEmailChange = (event) => {
-   this.setState({signInEmail: event.target.value})
+    onEmailChange = (event) => {
+       this.setState({signInEmail: event.target.value})
 }
 
-onPasswordChange = (event) => {
-    this.setState({signInPassword: event.target.value})
+    onPasswordChange = (event) => {
+        this.setState({signInPassword: event.target.value})
 } 
 
-onSubmitSignIn = async () => {
-  const { user, error } = await supabase.auth.signIn({
-    email: this.state.signInEmail,
-    password: this.state.signInPassword,
-  })
-
-  if (error) {
-    console.error('Error: ', error.message)
-  } else {
-    // User is signed in
-    this.props.loadUser(user);
-    this.props.onRouteChange('home');
-  }
-}
+    onSubmitSignIn = () => {
+      fetch('http://localhost:3000/signin', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ 
+            email: this.state.signInEmail,
+            password: this.state.signInPassword
+        })
+     })
+     .then(response => response.json())
+     .then(user => {
+        if(user.id) { // check if the user object has an id property
+           this.props.loadUser(user);
+           this.props.onRouteChange('home');
+          }
+       })
+      
+    }
 
 render() {
     const {  onRouteChange  } = this.props;

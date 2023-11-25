@@ -36,7 +36,18 @@ class App extends Component {
     super();
     this.state = initialState;
   }
-
+  // loadUser = (data) => {
+  //   this.setState({
+  //     user: {
+  //       id: data.id || '',
+  //       name: data.name || '',
+  //       email: data.email || '',
+  //       entries: data.entries || 0,
+  //       joined: data.joined || ''
+  //     }
+  //   });
+  // }
+  
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,

@@ -28,7 +28,28 @@ class Register extends React.Component {
   onPasswordChange = (event) => {
     this.setState({password: event.target.value})
   }
-
+ 
+  // onSubmitSignIn = async (event) => {
+  //   event.preventDefault();
+  //   const { user, error } = await supabase.auth.signUp({
+  //     email: this.state.email,
+  //     password: this.state.password,
+  //   });
+  
+  //   // Log the user object and error to the console
+  //   console.log('User:', user);
+  //   console.log('Error:', error);
+  
+  //   if (error) {
+  //     console.error('Error: ', error.message);
+  //   } else {
+  //     // The user has been registered successfully
+  //     this.props.loadUser(user);
+  //     this.props.onRouteChange('home');
+  //   }
+  // }
+  
+  
   onSubmitSignIn = async (event) => {
     event.preventDefault();
     const { user, error } = await supabase.auth.signUp({

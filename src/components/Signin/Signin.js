@@ -25,6 +25,20 @@ onPasswordChange = (event) => {
     this.setState({signInPassword: event.target.value})
 } 
 
+// onSubmitSignIn = async () => {
+//   const { user, error } = await supabase.auth.signInWithPassword({
+//     email: this.state.signInEmail,
+//     password: this.state.signInPassword,
+//   })
+
+//   if (error) {
+//     console.error('Error: ', error.message)
+//   } else {
+//     // User is signed in
+//     this.props.loadUser(user);
+//     this.props.onRouteChange('home');
+//   }
+// }
 onSubmitSignIn = async () => {
   const { user, error } = await supabase.auth.signIn({
     email: this.state.signInEmail,

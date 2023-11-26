@@ -25,8 +25,33 @@ onPasswordChange = (event) => {
     this.setState({signInPassword: event.target.value})
 } 
 
+
+onSubmitSignIn = async () => {
+  try {
+    const { user, error } = await supabase.auth.signIn({
+      email: this.state.signInEmail,
+      password: this.state.signInPassword,
+    });
+
+    if (error) {
+      console.error('Error signing in:', error.message);
+      // Display an error message to the user
+      // Example: this.setState({ errorMessage: 'Invalid email or password' });
+    } else {
+      // User is signed in
+      this.props.loadUser(user);
+      this.props.onRouteChange('home');
+    }
+  } catch (error) {
+    console.error('Unexpected error signing in:', error.message);
+    // Display a generic error message to the user
+    // Example: this.setState({ errorMessage: 'An unexpected error occurred' });
+  }
+}
+
+
 // onSubmitSignIn = async () => {
-//   const { user, error } = await supabase.auth.signInWithPassword({
+//   const { user, error } = await supabase.auth.signIn({
 //     email: this.state.signInEmail,
 //     password: this.state.signInPassword,
 //   })
@@ -39,20 +64,6 @@ onPasswordChange = (event) => {
 //     this.props.onRouteChange('home');
 //   }
 // }
-onSubmitSignIn = async () => {
-  const { user, error } = await supabase.auth.signIn({
-    email: this.state.signInEmail,
-    password: this.state.signInPassword,
-  })
-
-  if (error) {
-    console.error('Error: ', error.message)
-  } else {
-    // User is signed in
-    this.props.loadUser(user);
-    this.props.onRouteChange('home');
-  }
-}
 
 render() {
     const {  onRouteChange  } = this.props;

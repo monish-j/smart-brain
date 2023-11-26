@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import ParticlesBg from 'particles-bg'
+import ParticlesBg from 'particles-bg';
 import { createClient } from '@supabase/supabase-js';
 
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
@@ -49,14 +49,19 @@ class App extends Component {
   // }
   
   loadUser = (data) => {
-    this.setState({user: {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      entries: data.entries,
-      joined: data.joined
+    if (data) {
+      this.setState({
+        user: {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          entries: data.entries,
+          joined: data.joined
+        }
+      });
+    } else {
+      console.log('User data is undefined');
     }
-  });
   }
 
 
@@ -82,38 +87,39 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
  
+
   onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input});
-    fetch('https://smart-brain-alpha.vercel.app/imageurl', {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        input: this.state.input
-      })
+    this.setState({ imageUrl: this.state.input });
+    fetch('https://smart-brain-api-wheat.vercel.app/imageurl', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            input: this.state.input
+        })
     })
+        .then(response => response.json())
+        .then(response => {
+            if (response) {
+                fetch('https://smart-brain-api-wheat.vercel.app/image', {
+                    method: 'put',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: this.state.user.id
+                    })
+                })
+                    .then(response => response.json())
+                    .then(count => {
+                        this.setState(Object.assign(this.state.user, { entries: count }))
+                    })
+                    .catch(console.log)
+            }
+            this.displayFaceBox(this.calculateFaceLocation(response))
+        })
+        .catch(err => console.log(err));
+}
 
-      .then(response => response.json())
-      .then(response => {
-        if (response) {
-          fetch('https://smart-brain-alpha.vercel.app/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-             id: this.state.user.id
-            })
-          })
 
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, { entries: count}))
-          })
-          .catch(console.log)
 
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      })
-      .catch(err => console.log(err));
-  }
 
   onRouteChange = (route) => {
     if (route === 'signout') {

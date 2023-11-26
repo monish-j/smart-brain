@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import ParticlesBg from 'particles-bg';
 import { createClient } from '@supabase/supabase-js';
@@ -12,7 +11,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import './App.css';
 
-const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -36,18 +35,7 @@ class App extends Component {
     super();
     this.state = initialState;
   }
-  // loadUser = (data) => {
-  //   this.setState({
-  //     user: {
-  //       id: data.id || '',
-  //       name: data.name || '',
-  //       email: data.email || '',
-  //       entries: data.entries || 0,
-  //       joined: data.joined || ''
-  //     }
-  //   });
-  // }
-  
+
   loadUser = (data) => {
     if (data) {
       this.setState({
@@ -64,9 +52,7 @@ class App extends Component {
     }
   }
 
-
-
- calculateFaceLocation = (data) => {
+  calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
@@ -86,11 +72,10 @@ class App extends Component {
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   }
- 
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch('https://smart-brain-api-wheat.vercel.app/imageurl', {
+    fetch(`${supabaseUrl}/imageurl`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -100,7 +85,7 @@ class App extends Component {
         .then(response => response.json())
         .then(response => {
             if (response) {
-                fetch('https://smart-brain-api-wheat.vercel.app/image', {
+                fetch(`${supabaseUrl}/image`, {
                     method: 'put',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -116,10 +101,7 @@ class App extends Component {
             this.displayFaceBox(this.calculateFaceLocation(response))
         })
         .catch(err => console.log(err));
-}
-
-
-
+  }
 
   onRouteChange = (route) => {
     if (route === 'signout') {
@@ -161,5 +143,3 @@ class App extends Component {
 }
 
 export default App;
-
-

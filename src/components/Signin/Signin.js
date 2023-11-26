@@ -47,7 +47,8 @@ onSubmitSignIn = async () => {
     // Display a generic error message to the user
     // Example: this.setState({ errorMessage: 'An unexpected error occurred' });
   }
-}
+};
+
 
 
 // onSubmitSignIn = async () => {

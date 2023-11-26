@@ -3,10 +3,11 @@ import React from 'react';
 
 import { createClient } from '@supabase/supabase-js';
 
-
-const supabaseUrl = 'https://uwesdmrwcmooybaqwxls.supabase.co';
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+
 
 class Signin extends React.Component  {
   constructor(props) {
@@ -39,7 +40,7 @@ onSubmitSignIn = async () => {
       // Example: this.setState({ errorMessage: 'Invalid email or password' });
     } else {
       // User is signed in
-      this.props.loadUser(user);
+      this.props.loadUser(user?.user); // Update to use user.user
       this.props.onRouteChange('home');
     }
   } catch (error) {
@@ -49,22 +50,6 @@ onSubmitSignIn = async () => {
   }
 };
 
-
-
-// onSubmitSignIn = async () => {
-//   const { user, error } = await supabase.auth.signIn({
-//     email: this.state.signInEmail,
-//     password: this.state.signInPassword,
-//   })
-
-//   if (error) {
-//     console.error('Error: ', error.message)
-//   } else {
-//     // User is signed in
-//     this.props.loadUser(user);
-//     this.props.onRouteChange('home');
-//   }
-// }
 
 render() {
     const {  onRouteChange  } = this.props;
